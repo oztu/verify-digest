@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Verify Digest</title>
+  <style>
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      padding: 0;
+      margin: 0;
+    }
+
+    .match {
+      background-color: yellow;
+    }
+
+    ul {
+      padding: 0;
+    }
+    li {
+      padding: 10px 20px;
+      list-style-type: none;
+      font-size: 20px;
+      word-break: break-word;
+    }
+
+    h1 {
+      margin: 50px;
+      text-align: center;
+    }
+
+    #ExpectedContainer {
+      margin: 20px;
+    }
+    #Expected {
+      font-size:26px;
+      width: 100%;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+
+<a href="https://github.com/oztu/verify-digest">
+<img alt="Fork me on GitHub" style="position: absolute; top: 0; right: 0; border: 0;"  src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJUAAACVCAYAAABRorhPAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAHhFJREFUeNrsXWl0k+eVvjJggo03vGJLsrFlbHZsYzYD6SxdSH90uiVkzmlCogCdniadpCUzc0oyLZCek5CkJcmPAFEJSc+EzHSZ/pjQNk2aNIUkgDFgy7uNF9nG+44BL5r33u979S2WV8myLL/3nA/Ju4QePfd573vf5xqcTie4C4PB4Lor3wbJ9xfI9xdExSY/m5AQf3BlugVa29qhtLQc/CWSk82wYf1aaGtvh4sX88u72hsfununv519aVC+hnTXMLtG5MspX+Ac6z9IxJhhmCao+LUwKsZ8KDw8/KnczTnQ19sPJaVl0Nvb5xdPbsmSJbBh3Rro7OqC0rKKiv6elkfu3rnVqgKWHmACWF6IIE9/QWdb3fN9/f3Hq6trICYmGjIy0v3myQ0MDMCN2jpIZ0z6hXt3pCeaLGcWBYfEsy8tZlewfC3CN4d8cRbmbyCD/AYzCKjMDFMZVP/hnKkWyVdwZLTp35aEhH4/O2s9dHf3QEVlNQwODvrFk4yPj4OMlRaWCjvAbi+u7OtueWzw7kAL+9Jd+RqUbwVj+QhUoHrXBqku/u5WA+tgSkry97KzN0I7ewEv5xcwtrjtF080NDQUNudmQ19fP0uFZdWN9VWPMmBhKrwjgDW76c+pukb0V1d7/S9u1NSc+Piv52F4eBjMJqPfPNFbt25B9Y1aiIuLgVWZGalLI+LeWBS8JE5OhYv5G0OkQt8ylVqsu02B8rU4Itr4ZGxM3D5ihv5+uHbdzsR7r1884UWLFkFO1gbo6umBysqqqs62BnUqvCMYa3aZil/D8uVanne3O17p6Gi32YtLaQWWtiLZb54w6rz6hgbIZBpr+9YtafGJKzhjBQvG8i1TTcRWC3WMRSklYpnxiZDQpdZNOVlMy/RBeUWl32is6GVRkJG5EtqxvlZWjuJ9n2Cs2Ssp6DWVnqn4i3G3u8Px6q3+PpvD0QApKWbIYmkH048/RHtHJ5SUlFGRNC9vm8WYnG4TjOV7UDndpED+7lUDalD1br+DwKqurra9/+e/wMjQMKT6USrE0gdjKVgaEgorUlJQvJ8SwPJt+nNXt+LXgrHKDKpU+HhiUqI1d1MO9DCRXHD1ut9U3hcvXgw5ORvZ4+ol8d56s1aI91lIf9NirKbGJhvWroIMQWDyo3LDnTt3oKGhCSypKZCTnZUWHWcS4t3HTOUxY4VHRDDGksoNpSXldOsPEbY0FNasWQUdnV1QJsS7T5nKY8bq6+213aipg4S4OFi9OhN89wbXV0O00dvXD7iHmW5JhV078yxJZosQ7z5mKo8Za0lIqDV743roZhqrvKKKqvAzAyTpxunugeu2OPF5L09IgIwMC7S0tEKRtFcoGMuXoMKfV70zpwwss9ls3bQpCzpZysm/chX6+295F1AaMLmFlQpcynMOCVkCmKJxMVFeUVHd5Ki2CmDNfPpTA2vaqbCurs72t/OfMZYaAZPROEOAcipU5XSqX3K63L3qWKStrauHxMTlsGb16tSwyHhRbvAlU6l+ZtqMtSw6xrolN4eJ9j4oLCrxcK/QCU6nOvUpwNnzwDdh7ZrVcOjZI/xVp4fpjq14uSFrwzro6sYUXVHV3dEkyg2+YCpvMFZ3V6ettLwcwsKWgiVthdcA5eSAYrd77v8mHD38DAHr6OFDClmNwVa83FDvaCCNtXPH9rREY5oQ775kKm8wFu4V5mRvgB6mZRgx0Is63ZQnPTbpEw8wID135Fn6Sn29g+pkZ9/9NWOso/JzNaiYa3TExsZQox/2iRWXlArx7ium8gZj0V5hQyOxVW5uFqWfqa/1nABOZdWnBtSPn/kpfO3rD0BRUTFjrG/BgX2P6NjK/Wve2tpGLTxJSYmQt22r2Cv0Nag8BdaN6hu2Dz78GIaHhiEl2TQlltKAiz0ENaDOX/gMzp79Ne35PbR3P5w79yfGVr8ZE0j66O/vp06L8IhwSLekib1CX6Y/b6XChIQEay6Kd5YKC64VTiDeVVrKKfEOaagjz2hS3jtn/wcOPXNYehgGOemxhziZFMgDOy1yc7JYiu6FisrKqrbmeiHefcFU3mCslpYW29WrhbBw4QJInjRjKas8Dih1yntwz7chb/vW0ew0iRTIgxr9mHjHFL05d1NabIJZ7BX6kqm8wVhLw8KsSiGycowCqcJUa9esgt/95r9kQB2mlIefx7SFgMI0+CDTUxhn//s30NPdq2Ir6SEa3JQX9BEeHgZrV6+C9o4O0eg3G6DyBFiR0abHV6SmWtevWw1tbe1w8VI+FUvHW/ntuf8b7EUPhxMnfynxj/w4tzNQvfbKSxDBAIZB+uqR/WAvKhkNLG3h3S3IoqOXAdbXevv64HphUbWjtmLeV959CipvlBt4IbKsvEL3t/UVdNCUFJwyg7315ikC1AvHfk466+iR/yTmeuIHB13FT4Ost9QgMowBLnw6iYkJdIi2rbWdrRAL5z1j+RxUngLLaDJac3OyaRM6P/+qrm1GBywZTCCD68ybJyn9ocZCwY7x0Yd/gAjGaNm5OxRuMrgT7GNX3TGWLLkHsBcfOx3KyyuqmhtvzFvxHjQbf9QT8e6od9g+/fwSjIyMsNVckh6u4CIZ3eoO73E9JWksgOcYS+HZxPfO/YmAt2btKqa7wlzbOvQwVQ9VXYHXx+3bd6CuvoF+38b169Iio5fPW/EeNFt/2BNg3Wxqsl29VgTLWdrZunkTbe2MDyyJdTDd4b7ffbu/RIDClSBqqheOvcwAtRreOn2SLondRghQqMve/OXrJMjHAxY+ndraOvjT+x8Q4NMtlrT5ugkdNJt/3BNg9fZ026oqb8AyPGq10jIBY0n3HkfdxOJVJtQRUFhi+M7Dj1H96m1Za61FcLE0iSs7ZK0zp19nDLeFiqiTCWSsmrp6SE9Pg3t37bAkmubfXuGsaCpvaixs9KO9wp5eMgW5e/fuuAXRCAaWr3zli9DDGOq9c3+klPf2m2+4xDsy0468bfDQ3n0k6hFkrj1ClYCfqOQQHx/LwJ5Oq1V7ccm8Eu9+ASpPgZWSkkLA6ujogkv5V1QHVvXCXelYkFaDEishoEi8vyOJd/z47TNvSIA6i4A6zB5N0JRAhYE971Iv/i0oKS1FU5B5UW4I8pcH4kkqrKmpsf3l4/MwNDSkMwUZnQa5cI+MiIDXXnlRAZQs3vWAwq8Z6Xc6YbJ7hDz6bw1A1Y1aiI2NhsyMjHmzV+g3TOUNxoqLi5P2Cvv74Pp1O6XE8UoNWLfC6x1XxT2MUiECihdGEWR4+/AjB8BuL5mwqc9dBAcHAzJpNzX6VQa8KYjfgcoTYEXFmB83mUzWzMyVcqtK0cTFUbmGhVoKUyECCgU83mKpAe9jTQwBVcSuURX3SQLLmJQIm3I20vGvy/lXqpobawIWWH4JKm9U3nM3ZVF3Q3llFdxiaWgiYL16/Bjs3v0lqTWGgejA/kfhC39/H9Q7HKpaF6h0lQKmyYIrKioSVq3KgI72DvRGDVjx7reg8hRYqWlpVu5OfOliPgwODblfFcrPAVeF2LT3+kkb/P63Z+nzX/vGHlWVXQ0igw4/hikBC327cFO8sMgekHuFQf6MeE/Ee3VVlWIKkpoyqo6lXr0hdlF/nTh1mgl9E6U+rLwb1ABRgRBPMVPvOz+ZM0G1XR2oq4qLy8i3K1BNQfwaVJ4Cq6+3x8bdie/dlTeq8q5KXpr9viJ7MZz7w5+llGfQyjIU9lgQxYMTvDTBddlkgIXVduzF+usnF8iHdMOGdZa45ckBtaXj1+nPW6kwMSnJyt2Ji4tL9U9g1GFTkzEJ6uodmu8hhlq7irZxcEWIWz7vvPtrOHnytG4DenLdoxjJZhNkbVwHrW0d8PnFSwGzKvR7pvIGYzU2NNjyr1yD+LhYKkZiUVJTyjJoJDcxicGgSX4sJSqAwh4tTGNP/+hfpe0bVVFVYayJX2c8rPr+Bx/BMNN7aakr0gIlFc4ZUHkjFbrcidkKTIMqfZFUlRIlQK1mKU+pvD9/7GXa4sH4LlslegIsFOzVN9AURNorDARTkDmT/ryVCu9ZEmLl7sRVOEBAsypUrwyl+5gKsTWZAwpLDijUsepOwpv9HqziI3sde/H4GKlw/FUhPp2EhDjaK8T62lw3BZmToPIUWOZksxVPw+Be4eUrBao6ll5nSau7/fv2UrrDxj5Kg3JHw/cff4pWiQX5F+jrrka/aQALA01BNm+SdgTKyiqqGx1zc69wIczRwP84GVjq/0DuRTQ05pIeTUHY7e2B21Z0J0YmKiuv1Fcc2LsNf7F0B0sNCLS8vK3w6nF5v/DQTykF5uVtox85f+FTCYz8ZxFYTnrb0u+ZzFsUN8JxtbqOpdsFCxam9vb1nertauaMNVHwpn36f5lNYAXBHA5Pj39xd+Lt27dAWFiYDlW64gMDybq1a5QN6HeRtdbAa6+8TN/z+gkbdaLiiefdu7+olBvc1LnGY32p0e9D+vOZmRmWudhBOmfTnzdS4bLYZEqFmStXQktrK1y9VqgtSrlpm8E6VWGhXZMGf3zoJ/RdTx98ynVKB/cMH37ku9Km9hTaZXgkJS4H7tt1peDqnPLHmtNM5SljdbTW0hH7jz85DyGhIbTKu+eexRq20rbNABVGzWajClA/JT313NGf0Me4zfP4Ez+k37X7K1+cMlvxaGhsgvPnP6ejaMYk45yqvC+EAAlPNBaAEd2JrVkb1tLJmkuXr8gdpJJAUvSV9NuxjnXy1C/pqBh2hf7lw3MudnrwgW/DC/U/p485a4FaW8n3J8NYuG85aB+E3NxsWBYVabGXlNhUe4V+q7ECIv15a1UYGRlp5e7E5RrxPpZFkVR+qKq4Tm0yh5jW4i3IyF7/9I0HpUKqpsI+tc6GoKAgMBoTYRVbVLS0tGEq9PtyQxAEWHgi3ru6umzcnXjnjm2qvUKDRrtzMw9+ohkBtE5u7EM3GWSsF178BW3laAqhOktIp/LP2HQzMgJ1dQ746OPzdLaQLRYs/u7dEHCg8hRYN2/etBUUoCnIQretyerOBg4sLHriiZzf/+5dMDG9hS0z75JFEWi6GJyg7WyYSneDa4AAA/ymnOy0mHj/HSAQcOnPW6kwLDzcZQqCdax+10lo936iKMpxZUhVdTeBB1l5V+n5Tz+D0RvPkzxMERbG/k4mDWzy1wECAQ0qT4CFrckrUldY8cQNbp2gKYiaANVbOYrscmqq8hjY944bz3tklxkMOvL1zBGlm3SKwIqNiQbsxUe/Ln80BQnI9OeNVNjZVvdqVaXU6IcvMe7LLVgQpHnxNRvQBpA7G7Sb0RxQyFBYasC9Q/wY22j4KWhNs98kUiG28Fy7VgiLWIpONpv9rtwQ8KDyVGOhByl3J8ZDpktDQ7XiXdc24/JvkFMeBxQeTv2/c3/EFmLpa9u2EICwmj/V6js+HaxjoacEli2ysjZaliel+o3Gmheg8hRYOEDgwqcXacyJ1hTEXduMcsOPeuHJZ6xpYSp9+uCT9Ln33vsjeZHiCR6+rTO6g3T84KYgJmMirF+31m9MQRbCPArPCqT0Ilq3bM6BqMhIKLSrBwjoiqTyv1hqwLhv95fJxQ9NQaTj9S/DgQNW2LNH0lkH9j1Kv+PcH97XbkIjyMbRWHyv8ObNZhogkG5JTysdHpn1TeiAF+reFO98r3D1qkxoa2uDy/lX9f8bo7wbsJddLdKRtbD8wA1CsNPhwH4rge3v/vGr4GDM47ZQCppPjQLa8uXxwH27cK9wNo/Yz0tQeVpuwEY/xZ24WjVAwE3lnV24+bx921YZQI8qjjN7HyO/UfwcpsWH9x6A859+7vYI2KiP3IArLjYGVjLt1942uwME5o2m8qbGuj1wy6a4E2erBgho9RXhlk7nlMDJU6fhvvu+7AIUCncEFDIUfg6DH7ZwndDRlC2co6vxumjBU9nct2vL5llrTV4I8zg80Vg1QK3EVjRDwwECSqOfq8NPYXxq2gM6eYMb1idO4cEJBFQECXWT3I5M2zoyDak7T7XExB+uwbVRrWYr7HmvqqqBNasyYOXK9FSm606pGMsnGmvepj9vpcK4+HgrdydGdz9FvOsKpBr/UexgCKPDFC7/KyyGuqvE522lVSMKfWQ4EvNqS6PR+ZDCZQqCvl0VlVUdrQ6fHf+a10zlDcbCLoJrhUVWdCdekWKG64V2VYGUg0leHcovPP6R/UycjwcoTIuvHD8mDxJQAkGF399D4B27nQZbdxyORgJWTPSytMv5C99QmYLMKGMJpvISY+EAAZU78RimIKoClHyggvrfQSuS1CzWLfdsYXMgriIRZPgzL8ond1wAVlXx1REZGQGrMzOgo7PTZ6YgAlReAhYfIECmIEwwf04DBIY15Qb34FLV0tEohDHUmdMnXJvP33/iR+Q8wx/QGdnuKCd316TSIMayqChaUKA9uC9MQebt6s/bq8Ku9noyBVHciVN1b0xlZejWw0EOPJiKoEHRjitEEu8KucG5c+/DsWPHVatEgIlaaLq6u8FeXAr3LLmHLSqSZ3yvUDDVDKTCJKOR/LHw0MOVK1cpJeqLpGMNEci/9Amx1UMP75eOfelAqeIlOHrkWSp2vvjiK5NiLCx90ONieqyysmrGjNcEU81AHavB4bDxVhmTyd2wcW0nKb+DK70IeZWnBpTU6+5UMZaTbLhxUhiOn9Mz1lidDtLo3ka2oEiGjRvWp0XFJM3IXqEA1QwBq7Gh0VZQcA0S4uOYnsnRmoJoKk9KMizCoUsuECk+DthRKm1OS2yGHQ5/u/AZtSzjgHHF0kh5qE6n+mErgXuF5Ns1PAKpM2QKIkA1g8Dq7e21udyJMzPcEpb6A0xlWARFdnvrzEnauqEWZfYxLy3gJvRbZ05Rn9aJEzaZ0Zw6ryxVncwNa+HKFE9Cr0y3wBfu3en1AQJCU/lAY/EBAlgewGHjGlMQjW+DdP/gD5+g/UAe3JL7QQYo7HTA34P7hv/8wP2uVeKPnz2s9SbVb0rrp4KxT8TFxUJmRjq04gABL5qCCKbyAWMN3Oq31dc3MGZIg23bNpM1o1u2koFw7KXjkJO7UwKLPARTA6iHH4Md27cRa/GeLfQs5TN1sDNiDc7ScZsOFTJobm6hTgv07dqcu8lrjCVA5SNg1dbW2j7+5AIMDQ9Dsll7SsegYRSDnAp7SS9h4XOPDlD19fU0tIkHAosfAzt6+Fkqkr56/AWarzMqHepS4cDAALh8uzK9M0BApD8fp8KY2Fgrdye+dt0u7xWOPQAT9/3+97fvyClvH9TX1bsmUqC1UVGRnYxC8Pj9c0eVyWCaaasuFhy75IDDxpUUXVnV2d447XKDAJWPgYWNfuoBAoopyNjA2nP/t6DQboeiQjsJ+DyW+hBQ3BgEA70cOKAQfHaWOvm4FPb35GkVMjOOUcdKSlpOU+ylAQIF0x6EKUA1S4yFAwSkvcJeEu+uIU1O55gje/GQBLbKoNHadx56zAVGDigS9QxoNBaFPZJIaq05RatHdKCxF5dMWCCNxlF3DPAd7bhXOL1GP6GpZklj4Skdh6MBUlOSITtrI6UfLtb1Hu98Vcdn7eDJ6R2y2Zqaocjc9uBTlBojaCzKKZeQV3DqHPdMBR5StdtL6W/k5W2zGJPTpyzeBVPNMmOFR0RY1zHd1NnVpXP00/djSWDACjqevsEzhE//6EkS8VzAY3AvUhTzqLXcT7Mf35abTEFYKsTaGnaTFkzRFESAyg+AtXz5citW3XFPruDqdTpqPx6w8Hb//keoAMprVkWFxfQ925ne+tVbssmtS1+VuFqb3Xc2uE+FuFeYk7MRemlAZ1VV683aSWkskf78IBWiKUh+wVViCL0piGGMeYVoAILaSmEhaXvn359+0vXTuDLE1SIevHCqq+6gpEFt1V1LEGQK4miEtNQUnGSfFh03OVMQwVR+xFhoCsLdiUtLK6j/aaKVoYQVJzX2qb2xXpC93t8+YyOhjhZHyrzCqU0Dw31L9O1Cq8jSSZiCCKbyI8bq7+ujWToJCQn0ImrwqTsFrVgZYXdnuAZQqK8kQL3h6s1CjaWdo+PUeWaNfSgaW3eqqmvIxsjNAIFg1ZuE3jQCVH4ELDQFkRr9JHdi7HtfsGDBhMAKD4/QaCjc3kHXZBTqWM9CkOHXsFVGMgZRUuERPOx6/zdB0wnoBl44YJx8u9jjMZtM6sr7Yh24For056ep0Gw2W7k7Mc7VUfyx1AJeO6/QaEqiAik/nHr+/KcMUPvoe7DsgBV3ZK2vfX0PdUSglwMZiNiLYe/ef4Hu3h6YyM4I9y1pQKfUi1/V1OByTb4jv0HuClD5MbDi4xPolE57ewdqGf3//Kgj9px9PvrgPdJRWTnbiaE4oPhKEYU97iViOUKy5j4gW3NPXG7Ap2M2m2D9Osm36/OLlyt7Om/iqrCZM644ouWDVOiJKcjg0KBVdiceZQqCR8CcTm4OYnBNm8CTztyvAQNZi2stXBFiwZQDClePeFJa3ys/Holgo19T003I3riepeiVlrIyeKOns/nRwbu3mkVJYQ6I9+6uLhs6JYeFL6Vj9jreUJUbXO0CZBGJ5QYEkztAcbBhYBfpdALPFdYy8OIcxV078yyJxrTTwYtDYpFxRfqbI6kQ9wqxi6CnZ3xTEHWB9MybJ6jLgRdHeRcDggstul1uM//wVdeMw6kMwcSIjY0hQ7i2tg4oKSmr6O9p/Y5If3MmFcoDBLLW0wHRS5cLZGCNHiBgoMFLBnjiBwdJvJOGUgEKxTv3zkImw4Irgmo6gboKzdck366IdHtx6a9E+ptDqbC6utr2wYd/pUOqyckmTRp0N/IEG/0QUGiwxlPe88d+QSu/CAZMZCoMzWjfsRd+YwauTLHTAg1H0i1pFsFUc1C8V1ZWW9GdGNuAFVOQsRmL5jyDZGqL4MJBAjz1of6SplJM3z0ID8/i6N6mm82wKXuj6KeaixoL7biNRqNr2LhiCjKxxlIbftA01ZeOg8tLa4p6yl2YWboVoJrD4l1tClJRUUktyu6BpcycwC5SZCgU6lxHTdXHfcLnJEA1d4HFTUGwEImWjFpTkNGb0LyPRjEd0m4qe8pSAlQBVm5Ad2K01S4rr9BMpnDrNONGlU92qtdkQqz+AmBViK3JtfX1dK5w187tqiP27gYIaC8DJyeDwSuAAhBOegG1KhweGraiO7HRmAQlpeXa+oDBOQ5kvDv0QYAqwIA1cPs27RWGh4ej7bWqNdl3U29F+guwVNjb02NDd2I6apWRPjv6UAj1wBTvLlOQHulc4eDgoGAqEZ6bgqA78UpLKmzbmqs1BZnhEJoqgDVWDWB/eZ8V3YnRFKS0rEKASoR3xHtpWRCZgsTERKtMQUT6E8DyIBV2dLTbuDtx6opkIdRFeE+8Y+WduxNXVFSTN5VgKhFeGN0ruRNnbVxHM5gFU4nwCmPhSej1a9dAR1cXlGtMQQRTCcaaJmNhgZS7E9+7K8+NHbcAlQDWNIDV1Nhou3T5Cv2wyWwSJQURnpcbcJYOYrKvr5/KDaEhIVBaWuZm5IlgKsFYUzYF6bW53IlXZQihLsJ74h2HjasHCAxpxsoJphKM5cGwcTxMgYa1ISHT3ysUmkpoLAoEVh27vT1w24ruxGaTyY0piACVANY09wqHhkdo2Piy6CgoLCye8l6hSH8iFboxBem0lZaVwdLQUEgbZQoihLoQ756agijuxOSZIJhKhMd7hSp3YggODhZMJcI7jBUZGWnl7sRlk9grFEJdiPdJifeq6hqqvMfHx+kGCIj0J1LhNFNhS3OzjbsTJ0+wVyjSn0iFUzQFCbdyd2I8Yq+YggimEozlgXivrXPQbED0ucLRJ4KpRHjKWMHyucLH0J24q6eHGv3Q+EwwlQhPGOv4wED/Ke5OvHPHNiqUitWfiOmuCvH7RrrbHT/H26GhoQPoToyGtaWyKYgAlYipAsspM9kwA9ZLBjAM375953uyOzEU2UtE+hMx7VRI6bCrvf5YX2/Pa9ydGPveBVOJmCpjcaYakTV5UHtLzfPDIyPDTTebf4DuxIKpRHjCWC7m6mqr+9md2wMvOxoaPC8phEclzrF1tHZm3qjnagCNp7jLrdftrGGDm88FRnS03Biv3MAnu6vvU0TFJv+Hx6ASEdDhDlhqIPGP1d/rFJpKxLjZUAaLmnlGVJ83yB8bBKhEeAosp469NBpAgErEVIHlVLOSO0EpQCViqsACHbicgqlEeAos0IFL/zUBKhEegUu/ShSgEjEzIBMVdRFeDwEqEV4Pg+jcFCGYSoQAlQgBKhEiBKhE+F/8vwADAJj2WoQSWcV+AAAAAElFTkSuQmCC"/>
+</a>
+  <div id="ExpectedContainer">
+    <input autofocus placeholder="Enter expected digest here" id="Expected" type="text" onkeyup="checkDigests()" onchange="checkDigests()">
+  </div>
+  <h1 id="Instructions">Drop a file on this page to generate digests</h1>
+  <ul id="Digests">
+  </ul>
+<script>
+if(!window.crypto || !window.crypto.subtle){
+  alert('Your browser doesn\'t support the native cryptography features required by this application. As of February 2014, Chrome 37+ and Opera 26+ support these features.');
+}
+
+var digestsList = document.getElementById('Digests');
+var expected = document.getElementById('Expected');
+var instructions = document.getElementById('Instructions');
+
+function checkDigests(){
+
+  value = expected.value.trim();
+
+  var nodes = digestsList.childNodes;
+  for(var i = 0, node; i < nodes.length; i++){
+    node = nodes[i];
+    if(!node || !node.dataset) continue;
+    if(node.dataset.digest === value){
+      node.classList.add('match');
+    } else {
+      node.classList.remove('match');
+    }
+  }
+}
+function updateDigests(digests){
+  if(instructions.parentNode){
+    instructions.parentNode.removeChild(instructions);
+  }
+  
+  digestsList.innerHTML = '';
+
+  var fragment = document.createDocumentFragment();
+  digests.sort(function(a, b){
+    a = a.algorithm;
+    b = b.algorithm;
+
+    if(a < b) return -1;
+    if(a > b) return 1;
+    return 0;
+  }).forEach(function(digest){
+    var li = document.createElement('li');
+    fragment.appendChild(li);
+    li.dataset.algorithm = digest.algorithm;
+    li.dataset.digest = digest.digest;
+    li.innerHTML = '<strong>' + digest.algorithm + '&nbsp;</strong> <code>' + digest.digest + '</code>'; 
+  });
+
+  digestsList.innerHTML = '';
+  digestsList.appendChild(fragment);
+  checkDigests();
+}
+
+function bufferToHex(buffer){
+  var bytes = new Uint8Array(buffer);
+  var res = '';
+  for (var i = 0; i < bytes.length; i++) {
+    var byte = bytes[i].toString(16);
+    byte = (byte.length < 2) ? ('0' + byte) : byte;
+    res += byte;
+  }
+  return res;  
+}
+
+document.body.addEventListener('dragover', function(e){
+  e.stopPropagation();
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'copy';
+}, false);
+
+document.body.addEventListener('drop', function (e) {
+  e.stopPropagation();
+  e.preventDefault();
+  
+  var reader = new FileReader();
+  var files = e.dataTransfer.files;
+  reader.readAsArrayBuffer(files[0]);
+  reader.onload = function(e){
+    var buffer = e.target.result;
+    
+    var digests = [];
+    digests.push({
+      algorithm: 'md5',
+      digest: SparkMD5.ArrayBuffer.hash(buffer)
+    });
+
+    [
+      'SHA-1', 
+      'SHA-256', 
+      'SHA-384', 
+      'SHA-512'
+    ].forEach(function(algoName){
+      crypto.subtle.digest({ name: algoName }, buffer).then(bufferToHex).then(function(digestHex){
+        digests.push({
+          algorithm: algoName,
+          digest: digestHex
+        });
+
+        if(digests.length === 5){
+          updateDigests(digests);
+        }
+      }); 
+    });
+  };
+}, false);
+</script>
+
+
+<script>
+/**
+This script tag contains SparkMD5 by satazor (https://github.com/satazor/SparkMD5).
+Use under the DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
+*/
+
+(function (factory) {
+    if (typeof exports === 'object') {
+        // Node/CommonJS
+        module.exports = factory();
+    } else if (typeof define === 'function' && define.amd) {
+        // AMD
+        define(factory);
+    } else {
+        // Browser globals (with support for web workers)
+        var glob;
+
+        try {
+            glob = window;
+        } catch (e) {
+            glob = self;
+        }
+
+        glob.SparkMD5 = factory();
+    }
+}(function (undefined) {
+
+    'use strict';
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    /*
+     * Fastest md5 implementation around (JKM md5)
+     * Credits: Joseph Myers
+     *
+     * @see http://www.myersdaily.org/joseph/javascript/md5-text.html
+     * @see http://jsperf.com/md5-shootout/7
+     */
+
+    /* this function is much faster,
+      so if possible we use it. Some IEs
+      are the only ones I know of that
+      need the idiotic second function,
+      generated by an if clause.  */
+    var add32 = function (a, b) {
+        return (a + b) & 0xFFFFFFFF;
+    },
+
+    cmn = function (q, a, b, x, s, t) {
+        a = add32(add32(a, q), add32(x, t));
+        return add32((a << s) | (a >>> (32 - s)), b);
+    },
+
+    ff = function (a, b, c, d, x, s, t) {
+        return cmn((b & c) | ((~b) & d), a, b, x, s, t);
+    },
+
+    gg = function (a, b, c, d, x, s, t) {
+        return cmn((b & d) | (c & (~d)), a, b, x, s, t);
+    },
+
+    hh = function (a, b, c, d, x, s, t) {
+        return cmn(b ^ c ^ d, a, b, x, s, t);
+    },
+
+    ii = function (a, b, c, d, x, s, t) {
+        return cmn(c ^ (b | (~d)), a, b, x, s, t);
+    },
+
+    md5cycle = function (x, k) {
+        var a = x[0],
+            b = x[1],
+            c = x[2],
+            d = x[3];
+
+        a = ff(a, b, c, d, k[0], 7, -680876936);
+        d = ff(d, a, b, c, k[1], 12, -389564586);
+        c = ff(c, d, a, b, k[2], 17, 606105819);
+        b = ff(b, c, d, a, k[3], 22, -1044525330);
+        a = ff(a, b, c, d, k[4], 7, -176418897);
+        d = ff(d, a, b, c, k[5], 12, 1200080426);
+        c = ff(c, d, a, b, k[6], 17, -1473231341);
+        b = ff(b, c, d, a, k[7], 22, -45705983);
+        a = ff(a, b, c, d, k[8], 7, 1770035416);
+        d = ff(d, a, b, c, k[9], 12, -1958414417);
+        c = ff(c, d, a, b, k[10], 17, -42063);
+        b = ff(b, c, d, a, k[11], 22, -1990404162);
+        a = ff(a, b, c, d, k[12], 7, 1804603682);
+        d = ff(d, a, b, c, k[13], 12, -40341101);
+        c = ff(c, d, a, b, k[14], 17, -1502002290);
+        b = ff(b, c, d, a, k[15], 22, 1236535329);
+
+        a = gg(a, b, c, d, k[1], 5, -165796510);
+        d = gg(d, a, b, c, k[6], 9, -1069501632);
+        c = gg(c, d, a, b, k[11], 14, 643717713);
+        b = gg(b, c, d, a, k[0], 20, -373897302);
+        a = gg(a, b, c, d, k[5], 5, -701558691);
+        d = gg(d, a, b, c, k[10], 9, 38016083);
+        c = gg(c, d, a, b, k[15], 14, -660478335);
+        b = gg(b, c, d, a, k[4], 20, -405537848);
+        a = gg(a, b, c, d, k[9], 5, 568446438);
+        d = gg(d, a, b, c, k[14], 9, -1019803690);
+        c = gg(c, d, a, b, k[3], 14, -187363961);
+        b = gg(b, c, d, a, k[8], 20, 1163531501);
+        a = gg(a, b, c, d, k[13], 5, -1444681467);
+        d = gg(d, a, b, c, k[2], 9, -51403784);
+        c = gg(c, d, a, b, k[7], 14, 1735328473);
+        b = gg(b, c, d, a, k[12], 20, -1926607734);
+
+        a = hh(a, b, c, d, k[5], 4, -378558);
+        d = hh(d, a, b, c, k[8], 11, -2022574463);
+        c = hh(c, d, a, b, k[11], 16, 1839030562);
+        b = hh(b, c, d, a, k[14], 23, -35309556);
+        a = hh(a, b, c, d, k[1], 4, -1530992060);
+        d = hh(d, a, b, c, k[4], 11, 1272893353);
+        c = hh(c, d, a, b, k[7], 16, -155497632);
+        b = hh(b, c, d, a, k[10], 23, -1094730640);
+        a = hh(a, b, c, d, k[13], 4, 681279174);
+        d = hh(d, a, b, c, k[0], 11, -358537222);
+        c = hh(c, d, a, b, k[3], 16, -722521979);
+        b = hh(b, c, d, a, k[6], 23, 76029189);
+        a = hh(a, b, c, d, k[9], 4, -640364487);
+        d = hh(d, a, b, c, k[12], 11, -421815835);
+        c = hh(c, d, a, b, k[15], 16, 530742520);
+        b = hh(b, c, d, a, k[2], 23, -995338651);
+
+        a = ii(a, b, c, d, k[0], 6, -198630844);
+        d = ii(d, a, b, c, k[7], 10, 1126891415);
+        c = ii(c, d, a, b, k[14], 15, -1416354905);
+        b = ii(b, c, d, a, k[5], 21, -57434055);
+        a = ii(a, b, c, d, k[12], 6, 1700485571);
+        d = ii(d, a, b, c, k[3], 10, -1894986606);
+        c = ii(c, d, a, b, k[10], 15, -1051523);
+        b = ii(b, c, d, a, k[1], 21, -2054922799);
+        a = ii(a, b, c, d, k[8], 6, 1873313359);
+        d = ii(d, a, b, c, k[15], 10, -30611744);
+        c = ii(c, d, a, b, k[6], 15, -1560198380);
+        b = ii(b, c, d, a, k[13], 21, 1309151649);
+        a = ii(a, b, c, d, k[4], 6, -145523070);
+        d = ii(d, a, b, c, k[11], 10, -1120210379);
+        c = ii(c, d, a, b, k[2], 15, 718787259);
+        b = ii(b, c, d, a, k[9], 21, -343485551);
+
+        x[0] = add32(a, x[0]);
+        x[1] = add32(b, x[1]);
+        x[2] = add32(c, x[2]);
+        x[3] = add32(d, x[3]);
+    },
+
+    /* there needs to be support for Unicode here,
+       * unless we pretend that we can redefine the MD-5
+       * algorithm for multi-byte characters (perhaps
+       * by adding every four 16-bit characters and
+       * shortening the sum to 32 bits). Otherwise
+       * I suggest performing MD-5 as if every character
+       * was two bytes--e.g., 0040 0025 = @%--but then
+       * how will an ordinary MD-5 sum be matched?
+       * There is no way to standardize text to something
+       * like UTF-8 before transformation; speed cost is
+       * utterly prohibitive. The JavaScript standard
+       * itself needs to look at this: it should start
+       * providing access to strings as preformed UTF-8
+       * 8-bit unsigned value arrays.
+       */
+    md5blk = function (s) {
+        var md5blks = [],
+            i; /* Andy King said do it this way. */
+
+        for (i = 0; i < 64; i += 4) {
+            md5blks[i >> 2] = s.charCodeAt(i) + (s.charCodeAt(i + 1) << 8) + (s.charCodeAt(i + 2) << 16) + (s.charCodeAt(i + 3) << 24);
+        }
+        return md5blks;
+    },
+
+    md5blk_array = function (a) {
+        var md5blks = [],
+            i; /* Andy King said do it this way. */
+
+        for (i = 0; i < 64; i += 4) {
+            md5blks[i >> 2] = a[i] + (a[i + 1] << 8) + (a[i + 2] << 16) + (a[i + 3] << 24);
+        }
+        return md5blks;
+    },
+
+    md51 = function (s) {
+        var n = s.length,
+            state = [1732584193, -271733879, -1732584194, 271733878],
+            i,
+            length,
+            tail,
+            tmp,
+            lo,
+            hi;
+
+        for (i = 64; i <= n; i += 64) {
+            md5cycle(state, md5blk(s.substring(i - 64, i)));
+        }
+        s = s.substring(i - 64);
+        length = s.length;
+        tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        for (i = 0; i < length; i += 1) {
+            tail[i >> 2] |= s.charCodeAt(i) << ((i % 4) << 3);
+        }
+        tail[i >> 2] |= 0x80 << ((i % 4) << 3);
+        if (i > 55) {
+            md5cycle(state, tail);
+            for (i = 0; i < 16; i += 1) {
+                tail[i] = 0;
+            }
+        }
+
+        // Beware that the final length might not fit in 32 bits so we take care of that
+        tmp = n * 8;
+        tmp = tmp.toString(16).match(/(.*?)(.{0,8})$/);
+        lo = parseInt(tmp[2], 16);
+        hi = parseInt(tmp[1], 16) || 0;
+
+        tail[14] = lo;
+        tail[15] = hi;
+
+        md5cycle(state, tail);
+        return state;
+    },
+
+    md51_array = function (a) {
+        var n = a.length,
+            state = [1732584193, -271733879, -1732584194, 271733878],
+            i,
+            length,
+            tail,
+            tmp,
+            lo,
+            hi;
+
+        for (i = 64; i <= n; i += 64) {
+            md5cycle(state, md5blk_array(a.subarray(i - 64, i)));
+        }
+
+        // Not sure if it is a bug, however IE10 will always produce a sub array of length 1
+        // containing the last element of the parent array if the sub array specified starts
+        // beyond the length of the parent array - weird.
+        // https://connect.microsoft.com/IE/feedback/details/771452/typed-array-subarray-issue
+        a = (i - 64) < n ? a.subarray(i - 64) : new Uint8Array(0);
+
+        length = a.length;
+        tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        for (i = 0; i < length; i += 1) {
+            tail[i >> 2] |= a[i] << ((i % 4) << 3);
+        }
+
+        tail[i >> 2] |= 0x80 << ((i % 4) << 3);
+        if (i > 55) {
+            md5cycle(state, tail);
+            for (i = 0; i < 16; i += 1) {
+                tail[i] = 0;
+            }
+        }
+
+        // Beware that the final length might not fit in 32 bits so we take care of that
+        tmp = n * 8;
+        tmp = tmp.toString(16).match(/(.*?)(.{0,8})$/);
+        lo = parseInt(tmp[2], 16);
+        hi = parseInt(tmp[1], 16) || 0;
+
+        tail[14] = lo;
+        tail[15] = hi;
+
+        md5cycle(state, tail);
+
+        return state;
+    },
+
+    hex_chr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'],
+
+    rhex = function (n) {
+        var s = '',
+            j;
+        for (j = 0; j < 4; j += 1) {
+            s += hex_chr[(n >> (j * 8 + 4)) & 0x0F] + hex_chr[(n >> (j * 8)) & 0x0F];
+        }
+        return s;
+    },
+
+    hex = function (x) {
+        var i;
+        for (i = 0; i < x.length; i += 1) {
+            x[i] = rhex(x[i]);
+        }
+        return x.join('');
+    },
+
+    md5 = function (s) {
+        return hex(md51(s));
+    },
+
+
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * SparkMD5 OOP implementation.
+     *
+     * Use this class to perform an incremental md5, otherwise use the
+     * static methods instead.
+     */
+    SparkMD5 = function () {
+        // call reset to init the instance
+        this.reset();
+    };
+
+
+    // In some cases the fast add32 function cannot be used..
+    if (md5('hello') !== '5d41402abc4b2a76b9719d911017c592') {
+        add32 = function (x, y) {
+            var lsw = (x & 0xFFFF) + (y & 0xFFFF),
+                msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+            return (msw << 16) | (lsw & 0xFFFF);
+        };
+    }
+
+
+    /**
+     * Appends a string.
+     * A conversion will be applied if an utf8 string is detected.
+     *
+     * @param {String} str The string to be appended
+     *
+     * @return {SparkMD5} The instance itself
+     */
+    SparkMD5.prototype.append = function (str) {
+        // converts the string to utf8 bytes if necessary
+        if (/[\u0080-\uFFFF]/.test(str)) {
+            str = unescape(encodeURIComponent(str));
+        }
+
+        // then append as binary
+        this.appendBinary(str);
+
+        return this;
+    };
+
+    /**
+     * Appends a binary string.
+     *
+     * @param {String} contents The binary string to be appended
+     *
+     * @return {SparkMD5} The instance itself
+     */
+    SparkMD5.prototype.appendBinary = function (contents) {
+        this._buff += contents;
+        this._length += contents.length;
+
+        var length = this._buff.length,
+            i;
+
+        for (i = 64; i <= length; i += 64) {
+            md5cycle(this._state, md5blk(this._buff.substring(i - 64, i)));
+        }
+
+        this._buff = this._buff.substr(i - 64);
+
+        return this;
+    };
+
+    /**
+     * Finishes the incremental computation, reseting the internal state and
+     * returning the result.
+     * Use the raw parameter to obtain the raw result instead of the hex one.
+     *
+     * @param {Boolean} raw True to get the raw result, false to get the hex result
+     *
+     * @return {String|Array} The result
+     */
+    SparkMD5.prototype.end = function (raw) {
+        var buff = this._buff,
+            length = buff.length,
+            i,
+            tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            ret;
+
+        for (i = 0; i < length; i += 1) {
+            tail[i >> 2] |= buff.charCodeAt(i) << ((i % 4) << 3);
+        }
+
+        this._finish(tail, length);
+        ret = !!raw ? this._state : hex(this._state);
+
+        this.reset();
+
+        return ret;
+    };
+
+    /**
+     * Finish the final calculation based on the tail.
+     *
+     * @param {Array}  tail   The tail (will be modified)
+     * @param {Number} length The length of the remaining buffer
+     */
+    SparkMD5.prototype._finish = function (tail, length) {
+        var i = length,
+            tmp,
+            lo,
+            hi;
+
+        tail[i >> 2] |= 0x80 << ((i % 4) << 3);
+        if (i > 55) {
+            md5cycle(this._state, tail);
+            for (i = 0; i < 16; i += 1) {
+                tail[i] = 0;
+            }
+        }
+
+        // Do the final computation based on the tail and length
+        // Beware that the final length may not fit in 32 bits so we take care of that
+        tmp = this._length * 8;
+        tmp = tmp.toString(16).match(/(.*?)(.{0,8})$/);
+        lo = parseInt(tmp[2], 16);
+        hi = parseInt(tmp[1], 16) || 0;
+
+        tail[14] = lo;
+        tail[15] = hi;
+        md5cycle(this._state, tail);
+    };
+
+    /**
+     * Resets the internal state of the computation.
+     *
+     * @return {SparkMD5} The instance itself
+     */
+    SparkMD5.prototype.reset = function () {
+        this._buff = '';
+        this._length = 0;
+        this._state = [1732584193, -271733879, -1732584194, 271733878];
+
+        return this;
+    };
+
+    /**
+     * Releases memory used by the incremental buffer and other aditional
+     * resources. If you plan to use the instance again, use reset instead.
+     */
+    SparkMD5.prototype.destroy = function () {
+        delete this._state;
+        delete this._buff;
+        delete this._length;
+    };
+
+
+    /**
+     * Performs the md5 hash on a string.
+     * A conversion will be applied if utf8 string is detected.
+     *
+     * @param {String}  str The string
+     * @param {Boolean} raw True to get the raw result, false to get the hex result
+     *
+     * @return {String|Array} The result
+     */
+    SparkMD5.hash = function (str, raw) {
+        // converts the string to utf8 bytes if necessary
+        if (/[\u0080-\uFFFF]/.test(str)) {
+            str = unescape(encodeURIComponent(str));
+        }
+
+        var hash = md51(str);
+
+        return !!raw ? hash : hex(hash);
+    };
+
+    /**
+     * Performs the md5 hash on a binary string.
+     *
+     * @param {String}  content The binary string
+     * @param {Boolean} raw     True to get the raw result, false to get the hex result
+     *
+     * @return {String|Array} The result
+     */
+    SparkMD5.hashBinary = function (content, raw) {
+        var hash = md51(content);
+
+        return !!raw ? hash : hex(hash);
+    };
+
+    /**
+     * SparkMD5 OOP implementation for array buffers.
+     *
+     * Use this class to perform an incremental md5 ONLY for array buffers.
+     */
+    SparkMD5.ArrayBuffer = function () {
+        // call reset to init the instance
+        this.reset();
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Appends an array buffer.
+     *
+     * @param {ArrayBuffer} arr The array to be appended
+     *
+     * @return {SparkMD5.ArrayBuffer} The instance itself
+     */
+    SparkMD5.ArrayBuffer.prototype.append = function (arr) {
+        // TODO: we could avoid the concatenation here but the algorithm would be more complex
+        //       if you find yourself needing extra performance, please make a PR.
+        var buff = this._concatArrayBuffer(this._buff, arr),
+            length = buff.length,
+            i;
+
+        this._length += arr.byteLength;
+
+        for (i = 64; i <= length; i += 64) {
+            md5cycle(this._state, md5blk_array(buff.subarray(i - 64, i)));
+        }
+
+        // Avoids IE10 weirdness (documented above)
+        this._buff = (i - 64) < length ? buff.subarray(i - 64) : new Uint8Array(0);
+
+        return this;
+    };
+
+    /**
+     * Finishes the incremental computation, reseting the internal state and
+     * returning the result.
+     * Use the raw parameter to obtain the raw result instead of the hex one.
+     *
+     * @param {Boolean} raw True to get the raw result, false to get the hex result
+     *
+     * @return {String|Array} The result
+     */
+    SparkMD5.ArrayBuffer.prototype.end = function (raw) {
+        var buff = this._buff,
+            length = buff.length,
+            tail = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            i,
+            ret;
+
+        for (i = 0; i < length; i += 1) {
+            tail[i >> 2] |= buff[i] << ((i % 4) << 3);
+        }
+
+        this._finish(tail, length);
+        ret = !!raw ? this._state : hex(this._state);
+
+        this.reset();
+
+        return ret;
+    };
+
+    SparkMD5.ArrayBuffer.prototype._finish = SparkMD5.prototype._finish;
+
+    /**
+     * Resets the internal state of the computation.
+     *
+     * @return {SparkMD5.ArrayBuffer} The instance itself
+     */
+    SparkMD5.ArrayBuffer.prototype.reset = function () {
+        this._buff = new Uint8Array(0);
+        this._length = 0;
+        this._state = [1732584193, -271733879, -1732584194, 271733878];
+
+        return this;
+    };
+
+    /**
+     * Releases memory used by the incremental buffer and other aditional
+     * resources. If you plan to use the instance again, use reset instead.
+     */
+    SparkMD5.ArrayBuffer.prototype.destroy = SparkMD5.prototype.destroy;
+
+    /**
+     * Concats two array buffers, returning a new one.
+     *
+     * @param  {ArrayBuffer} first  The first array buffer
+     * @param  {ArrayBuffer} second The second array buffer
+     *
+     * @return {ArrayBuffer} The new array buffer
+     */
+    SparkMD5.ArrayBuffer.prototype._concatArrayBuffer = function (first, second) {
+        var firstLength = first.length,
+            result = new Uint8Array(firstLength + second.byteLength);
+
+        result.set(first);
+        result.set(new Uint8Array(second), firstLength);
+
+        return result;
+    };
+
+    /**
+     * Performs the md5 hash on an array buffer.
+     *
+     * @param {ArrayBuffer} arr The array buffer
+     * @param {Boolean}     raw True to get the raw result, false to get the hex result
+     *
+     * @return {String|Array} The result
+     */
+    SparkMD5.ArrayBuffer.hash = function (arr, raw) {
+        var hash = md51_array(new Uint8Array(arr));
+
+        return !!raw ? hash : hex(hash);
+    };
+
+    return SparkMD5;
+}));
+</script>
+</body>
+</html>
